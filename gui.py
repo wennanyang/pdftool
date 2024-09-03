@@ -15,8 +15,8 @@ class GUI():
         self.progress_lable_var = tk.StringVar()
         self.root.title("PDF字段提取程序")
         self.root.configure(bg="skyblue")
-        self.root.minsize(200, 200)  # width, height
-        self.root.maxsize(500, 500)
+        self.root.minsize(200, 80)  # width, height
+        self.root.maxsize(500, 150)
         self.root.geometry("600x300+250+250")
         self.root.iconbitmap(self.resource_path(r"ico\cloud.ico"))
         fang_frame = tk.Frame(self.root, bg="#6FAFE7")

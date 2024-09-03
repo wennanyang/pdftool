@@ -30,7 +30,6 @@ def make_PDF_result(pdf_dir : Path, exp_dir_name=Path("无法提取的PDF"),
     exp_count = 1
     pdf_files = list(pdf_dir.glob("*"))
     for i, pdf_file in enumerate(pdf_files):
-        print(i)
         if progress_callback is not None:
             progress_callback(value=(i + 1) / len(pdf_files) * 100, 
                               description=f"正在提取属性:{pdf_file.name}")
