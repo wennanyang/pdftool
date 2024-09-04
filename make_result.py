@@ -39,7 +39,6 @@ def make_PDF_result(pdf_dir : Path, exp_dir_name=Path("无法提取的PDF"),
             if result[1] == "":
                 ws.append(result)
                 ws.cell(row=i+2, column=1).hyperlink = str_pdf_path
-                print(pdf_file.as_posix())
                 fail_list.append(pdf_file)
                 continue
         except Exception as e:
