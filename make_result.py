@@ -30,22 +30,27 @@ def make_PDF_result(pdf_dir : Path, exp_dir_name=Path("无法提取的PDF"),
     exp_count = 1
     pdf_files = list(pdf_dir.glob("*"))
     for i, pdf_file in enumerate(pdf_files):
+        str_pdf_path = str(pdf_file)
         if progress_callback is not None:
             progress_callback(value=(i + 1) / len(pdf_files) * 100, 
                               description=f"正在提取属性:{pdf_file.name}")
         try:
             result = get_PDF_result(pdf_file)
-            if result is None:
-                fail_list.append(pdf_file.resolve())
+            if result[1] == "":
+                ws.append(result)
+                ws.cell(row=i+2, column=1).hyperlink = str_pdf_path
+                print(pdf_file.as_posix())
+                fail_list.append(pdf_file)
                 continue
         except Exception as e:
                 ## 写入日志
             with open("log", 'a', encoding='utf-8') as f:
-                f.write(f"{exp_count}'\t'{pdf_file.resolve()}'\n'{traceback.format_exc()}'\n'")
+                f.write(f"{exp_count}'\t'{str_pdf_path}'\n'{traceback.format_exc()}'\n'")
                 exp_count += 1
-            fail_list.append(pdf_file.resolve())
+            fail_list.append(pdf_file)
             continue
         ws.append(result)
+        ws.cell(row=i+2, column=1).hyperlink = str_pdf_path
     wb.save(save_name)
     for file in fail_list:   
         try:
@@ -63,8 +68,8 @@ def get_PDF_result(pdf_path : Path):
     LER_match = LER_PATTERN.search(text)
     TRLL_match = TRLL_PATTERN.search(text)
     if LER_match is not None and TRLL_match is not None:
-        return pdf_path.resolve().as_posix(), LER_match.group(), TRLL_match.group()
-    return None
+        return pdf_path.name, LER_match.group(), TRLL_match.group()
+    return pdf_path.name, "", ""
 
 def main(pdf_dir=None, progress_callback=None, args=None):
     if pdf_dir is not None :
